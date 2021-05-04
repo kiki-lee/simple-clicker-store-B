@@ -29,14 +29,6 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
         projectile.follow(bButton)
     }
 })
-function onBButtonPressed () {
-    animation.runImageAnimation(
-    bButton,
-    assets.animation`B button`,
-    100,
-    false
-    )
-}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     aButton.setImage(assets.image`A static Down`)
     info.changeScoreBy(power2)
@@ -64,32 +56,6 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 info.onCountdownEnd(function () {
     game.over(true, effects.confetti)
 })
-function onClick_Animation () {
-    onClick = sprites.createProjectileFromSprite(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . b . . . . . . . 
-        . . . . . . . b d b . . . . . . 
-        . . . . . . b 5 5 5 b . . . . . 
-        . . . . . b b 5 5 5 b b . . . . 
-        . . b b b b 5 5 5 1 1 b b b b . 
-        . . b 5 5 5 5 5 5 1 1 5 5 5 b . 
-        . . b d d 5 5 5 5 5 5 5 d d b . 
-        . . . b d d 5 5 5 5 5 d d b . . 
-        . . . c b 5 5 5 5 5 5 5 b c . . 
-        . . . c b 5 5 5 5 5 5 5 b c . . 
-        . . . c 5 5 d d b d d 5 5 c . . 
-        . . . c 5 d d c c c d d 5 c . . 
-        . . . c c c c . . . c c c c . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, aButton, randint(-25, 100), -100)
-    animation.runImageAnimation(
-    onClick,
-    assets.animation`star Animation`,
-    200,
-    false
-    )
-}
 controller.A.onEvent(ControllerButtonEvent.Released, function () {
     aButton.setImage(assets.image`A static`)
 })
@@ -101,18 +67,6 @@ let projectile: Sprite = null
 let power2 = 0
 let bButton: Sprite = null
 let aButton: Sprite = null
-// can't use controller events because it would override
-// the user's controller handlers.
-let debounce = 100
-control.runInParallel(function() {
-    while (true) {
-        controller.pauseUntilAnyButtonIsPressed();
-        if (controller.B.isPressed()) {
-            onBButtonPressed();
-            pause(debounce);
-        }
-    }
-})
 aButton = sprites.create(assets.image`A static`, SpriteKind.Clicker)
 bButton = sprites.create(assets.image`B static`, SpriteKind.Clicker)
 aButton.setPosition(24, 102)
@@ -240,7 +194,7 @@ scene.setBackgroundImage(img`
     222222eeebbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbeee222222
     `)
 info.startCountdown(10)
-game.splash("Press (A) to earn clicks!")
+game.splash("Press (A) to play!")
 let mySprite = sprites.create(img`
     .........ccc............
     .........cccccccc.......
@@ -268,3 +222,6 @@ let mySprite = sprites.create(img`
     ........cccccccc........
     `, SpriteKind.Player)
 power2 = 1
+// can't use controller events because it would override
+// the user's controller handlers.
+let debounce = 100
