@@ -2,9 +2,32 @@ namespace SpriteKind {
     export const Clicker = SpriteKind.create()
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    bButton.setImage(assets.image`B static down`)
     info.changeScoreBy(-20)
     power2 += 1
-    mySprite.say("Clicks are worth " + power2, 500)
+    for (let index = 0; index < 10; index++) {
+        projectile = sprites.createProjectileFromSide(img`
+            . . . . . . . b b . . . . . . . 
+            . . . . . . b d d b . . . . . . 
+            . . . . . b d 5 5 d b . . . . . 
+            . . . . b b 5 5 5 5 b b . . . . 
+            . . . . b 5 5 5 5 5 5 b . . . . 
+            b b b b b 5 5 5 5 1 1 d b b b b 
+            b 5 5 5 5 5 5 5 5 1 1 1 5 5 5 b 
+            b d d 5 5 5 5 5 5 1 1 1 5 d d b 
+            . b d d 5 5 5 5 5 5 5 5 d d b . 
+            . . b b 5 5 5 5 5 5 5 5 b b . . 
+            . . c b 5 5 5 5 5 5 5 5 b c . . 
+            . . c 5 5 5 5 d d 5 5 5 5 c . . 
+            . . c 5 5 d b b b b d 5 5 c . . 
+            . . c 5 d b c c c c b d 5 c . . 
+            . . c c c c . . . . c c c c . . 
+            . . . . . . . . . . . . . . . . 
+            `, 200, 200)
+        projectile.lifespan = 1000
+        projectile.x = randint(0, 160)
+        projectile.follow(bButton)
+    }
 })
 function onBButtonPressed () {
     animation.runImageAnimation(
@@ -15,9 +38,28 @@ function onBButtonPressed () {
     )
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    aButton.setImage(assets.image`A static Down`)
     info.changeScoreBy(power2)
-    mySprite.startEffect(effects.spray, 100)
-    onClick_Animation()
+    for (let index = 0; index < power2; index++) {
+        onClick = sprites.createProjectileFromSprite(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . b . . . . . . . 
+            . . . . . . . b d b . . . . . . 
+            . . . . . . b 5 5 5 b . . . . . 
+            . . . . . b b 5 5 5 b b . . . . 
+            . . b b b b 5 5 5 1 1 b b b b . 
+            . . b 5 5 5 5 5 5 1 1 5 5 5 b . 
+            . . b d d 5 5 5 5 5 5 5 d d b . 
+            . . . b d d 5 5 5 5 5 d d b . . 
+            . . . c b 5 5 5 5 5 5 5 b c . . 
+            . . . c b 5 5 5 5 5 5 5 b c . . 
+            . . . c 5 5 d d b d d 5 5 c . . 
+            . . . c 5 d d c c c d d 5 c . . 
+            . . . c c c c . . . c c c c . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, aButton, randint(-25, 100), -100)
+    }
 })
 info.onCountdownEnd(function () {
     game.over(true, effects.confetti)
@@ -49,16 +91,14 @@ function onClick_Animation () {
     )
 }
 controller.A.onEvent(ControllerButtonEvent.Released, function () {
-    animation.runImageAnimation(
-    aButton,
-    assets.animation`A button`,
-    100,
-    false
-    )
+    aButton.setImage(assets.image`A static`)
+})
+controller.B.onEvent(ControllerButtonEvent.Released, function () {
+    bButton.setImage(assets.image`B static`)
 })
 let onClick: Sprite = null
+let projectile: Sprite = null
 let power2 = 0
-let mySprite: Sprite = null
 let bButton: Sprite = null
 let aButton: Sprite = null
 // can't use controller events because it would override
@@ -201,7 +241,7 @@ scene.setBackgroundImage(img`
     `)
 info.startCountdown(10)
 game.splash("Press (A) to earn clicks!")
-mySprite = sprites.create(img`
+let mySprite = sprites.create(img`
     .........ccc............
     .........cccccccc.......
     ......cc..cc55555cc.....
