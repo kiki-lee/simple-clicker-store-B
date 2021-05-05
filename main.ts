@@ -42,6 +42,3 @@ info.startCountdown(10)
 game.splash("Press (A) to play!")
 let mySprite = sprites.create(assets.image`Kitten4`, SpriteKind.Player)
 power2 = 1
-// can't use controller events because it would override
-// the user's controller handlers.
-let debounce = 100
